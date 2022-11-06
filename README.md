@@ -4,13 +4,8 @@
 ## About
 
 ---
-
-While training HuggingFace's RoBERTa model, we stumbled across a variety of challenges,
-but the most complex one was to implement a tokenizer in Java ourselves.
-We decided to give back to the community and release it as an open source library.
-
 This repo contains a Java tokenizer used by RoBERTa model. The implementation is mainly according to HuggingFace Python
-RoBERTa Tokenizer but also we took referencs from other implementations as mentioned in the code and below:
+RoBERTa Tokenizer, but also we took references from other implementations as mentioned in the code and below:
 
 * https://huggingface.co/docs/transformers/model_doc/roberta#transformers.RobertaTokenizer
 
@@ -34,6 +29,14 @@ https://huggingface.co/docs/transformers/tokenizer_summary#bytelevel-bpe
     <artifactId>roberta-tokenizer</artifactId>
     <version>1.0.0</version>
 </dependency>
+
+<distributionManagement>
+    <repository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    ...
+</distributionManagement>
 ```
 
 
@@ -42,12 +45,6 @@ https://huggingface.co/docs/transformers/tokenizer_summary#bytelevel-bpe
 ---
 
 * Unit tests - Run on local machine.
-
-### Contribution guidelines
-
----
-
-* Use temporary branches for every issue/task.
 
 ### File Dependencies ###
 
@@ -92,3 +89,9 @@ System.out.println(tokenizedSentence);
 ```
 
 An example output would be: `[0, 9226, 531, 28, 5, 317, 2]` - Depends on the given vocabulary and merges files.
+
+### Contribution guidelines
+
+---
+
+* Use temporary branches for every issue/task.
