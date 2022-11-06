@@ -26,13 +26,14 @@ import static java.util.stream.LongStream.of;
  */
 public class RobertaTokenizer implements Tokenizer {
 
-    // Tokenized sentences shorter than the max allowed length will be padded with the PAD_TOKEN
-    public static final long PAD_TOKEN = 1;
+    public static final long PAD_TOKEN = 1; // Tokenized sentences shorter than the max allowed length will be padded with the PAD_TOKEN
 
-    // Default of Hugging Face
-    public static final long CLS_TOKEN = 0; // also BOS - beginning of sequence
-    public static final long SEP_TOKEN = 2; // also EOS - end of sequence
-    public static final long UNK_TOKEN = 3;
+    public static final long CLS_TOKEN = 0; // Classification token. Also BOS (beginning of sequence) token
+
+    public static final long SEP_TOKEN = 2; // Separator token. Also EOS (end of sequence) token
+
+    public static final long UNK_TOKEN = 3; // Unknown Token.
+
     //splits a given sentence by space in to words or sub-words
     private static final Pattern PATTERN = Pattern
             .compile("'s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| ?[^\\s\\p{L}\\p{N}]+|\\s+(?!\\S)|\\s+");

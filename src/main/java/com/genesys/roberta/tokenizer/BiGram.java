@@ -6,6 +6,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
 
+/**
+ * A sequence of two adjacent elements from a string which differs by their position - left or right
+ */
 public class BiGram extends Pair<String, String> {
     private static final int PAIR_SIZE = 2;
     private final String left;

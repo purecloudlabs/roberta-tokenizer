@@ -19,6 +19,9 @@ import java.util.stream.IntStream;
 
 import static com.genesys.roberta.tokenizer.validation.Validator.checkPathExists;
 
+/**
+ * Holds the vocabularies and the merges file used to encode and tokenize the inputs.
+ */
 public class RobertaTokenizerResources {
 
     private static final String BASE_VOCABULARY_FILE_NAME = "base_vocabulary.json";

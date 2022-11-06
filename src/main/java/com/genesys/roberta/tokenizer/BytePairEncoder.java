@@ -8,18 +8,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Byte-Pair-Encoding
+ * Relies on a pre-tokenizer that splits the training data into words, in our case space.
+ *
+ * This greedy algorithm looks for the best way to divide given input word.
+ * It does that by dividing the word into characters, then assembles sub strings of the given word trying to find the best
+ * partition of the word according to the ranks of the merges file.
+ */
 public class BytePairEncoder {
 
     /**
-     * Byte-Pair-Encoding
-     * Relies on a pre-tokenizer that splits the training data into words, in our case space.
-     *
-     * This greedy algorithm looks for the best way to divide given input word.
-     * It does that by dividing the word into characters, then assembles sub strings of the given word trying to find the best
-     * partition of the word according to the ranks of the merges file.
+     * Applies the byte level BPE algorithm on the given word
      *
      * @param word one word from an input sentence
-     * @return a list of strings partitioned and ready for tokenization
+     * @param robertaTokenizerRobertaResources holds the vocabulary resources
+     * @return a list of strings optimally partitioned and ready for tokenization
      */
     public List<String> encode(@NonNull final String word, @NonNull RobertaTokenizerResources robertaTokenizerRobertaResources) {
         List<String> wordCharactersStrList = word.chars()

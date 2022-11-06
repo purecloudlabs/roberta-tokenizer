@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * Handles common input validations
+ */
 public class Validator {
 
     /**
