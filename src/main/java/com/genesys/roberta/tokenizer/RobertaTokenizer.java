@@ -1,6 +1,7 @@
 package com.genesys.roberta.tokenizer;
 
 import lombok.NonNull;
+import lombok.val;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class RobertaTokenizer implements Tokenizer {
         Matcher matcher = PATTERN.matcher(sentence);
         while (matcher.find()) {
             String matchedSequence = matcher.group();
-            StringBuilder matchedSequenceEncoded = new StringBuilder();
+            val matchedSequenceEncoded = new StringBuilder();
 
             for (byte b : matchedSequence.getBytes(StandardCharsets.UTF_8)) {
                 String encodedByte = this.robertaResources.encodeByte(b);
