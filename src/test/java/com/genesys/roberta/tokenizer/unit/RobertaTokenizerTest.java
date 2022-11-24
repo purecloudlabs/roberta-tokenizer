@@ -2,7 +2,6 @@ package com.genesys.roberta.tokenizer.unit;
 
 import com.genesys.roberta.tokenizer.RobertaTokenizer;
 import com.genesys.roberta.tokenizer.RobertaTokenizerResources;
-import com.genesys.roberta.tokenizer.RobertaTokenizerResourcesFactory;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
@@ -22,7 +21,6 @@ public class RobertaTokenizerTest {
     private static final String VOCABULARY_BASE_DIR_PATH = getResourceAbsPath();
 
     @Mock
-    private RobertaTokenizerResourcesFactory robertaTokenizerResourcesFactory;
     private RobertaTokenizer robertaTokenizer;
 
 
@@ -30,8 +28,7 @@ public class RobertaTokenizerTest {
     public void initDataMembersBeforeClass() {
         MockitoAnnotations.openMocks(this);
         RobertaTokenizerResources robertaResources = new RobertaTokenizerResources(VOCABULARY_BASE_DIR_PATH);
-        when(robertaTokenizerResourcesFactory.create()).thenReturn(robertaResources);
-        robertaTokenizer = new RobertaTokenizer(robertaTokenizerResourcesFactory);
+        robertaTokenizer = new RobertaTokenizer(robertaResources);
     }
 
     @Test(expectedExceptions = NullPointerException.class)

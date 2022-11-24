@@ -6,7 +6,6 @@ import lombok.val;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.LongStream;
@@ -27,66 +26,44 @@ import static java.util.stream.LongStream.of;
 public class RobertaTokenizer implements Tokenizer {
 
     public static final long PAD_TOKEN = 1; // Tokenized sentences shorter than the max allowed length will be padded with the PAD_TOKEN
-
     public static final long CLS_TOKEN = 0; // Classification token. Also BOS (beginning of sequence) token
-
     public static final long SEP_TOKEN = 2; // Separator token. Also EOS (end of sequence) token
-
     public static final long UNK_TOKEN = 3; // Unknown Token.
 
     //splits a given sentence by space in to words or sub-words
     private static final Pattern PATTERN = Pattern
             .compile("'s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| ?[^\\s\\p{L}\\p{N}]+|\\s+(?!\\S)|\\s+");
 
-    private final RobertaTokenizerResourcesFactory robertaTokenizerFactory;
-    private final AtomicReference<RobertaTokenizerResources> robertaResourcesCache = new AtomicReference<>();
+    private final RobertaTokenizerResources robertaResources;
     private final BytePairEncoder bytePairEncoder;
 
     /**
      * Constructs a RoBERTa tokenizer, using byte-level Byte-Pair-Encoding.
      *
-     * @param robertaTokenizerResourcesFactory - responsible for providing roberta vocabularies and merges files.
+     * @param robertaTokenizerResources - responsible for providing roberta vocabularies and merges files.
      */
-    public RobertaTokenizer(@NonNull final RobertaTokenizerResourcesFactory robertaTokenizerResourcesFactory) {
-        this.robertaTokenizerFactory = robertaTokenizerResourcesFactory;
+    public RobertaTokenizer(@NonNull final RobertaTokenizerResources robertaTokenizerResources) {
+        this.robertaResources = robertaTokenizerResources;
         this.bytePairEncoder = new BytePairEncoder();
-    }
-
-    @Override
-    public long[] tokenize(@NonNull final String sentence) {
-        RobertaTokenizerResources robertaResources = getRobertaTokenizerResources();
-        return encode(sentence, robertaResources);
-    }
-
-    /**
-     * This method provides the resources needed for tokenization.
-     * It's initialized only when used first time
-     *
-     * @return object which holds the vocabularies and merges file according to the existing baseDirPath
-     */
-    private RobertaTokenizerResources getRobertaTokenizerResources() {
-        if (robertaResourcesCache.get() == null) {
-            robertaResourcesCache.compareAndSet(null, robertaTokenizerFactory.create());
-        }
-        return robertaResourcesCache.get();
     }
 
     /**
      * Encodes the given word into a list of tokens (long numbers) using Byte Level Byte-Pair-Encoding.
      *
-     * @param text a sentence
+     * @param sentence a word or more divided by space
      * @return an array of tokens (long) values
      */
-    private long[] encode(@NonNull final String text, @NonNull final RobertaTokenizerResources robertaResources) {
+    @Override
+    public long[] tokenize(@NonNull final String sentence) {
         List<String> encodedStrings = new ArrayList<>();
 
-        Matcher matcher = PATTERN.matcher(text);
+        Matcher matcher = PATTERN.matcher(sentence);
         while (matcher.find()) {
             String matchedSequence = matcher.group();
             val matchedSequenceEncoded = new StringBuilder();
 
             for (byte b : matchedSequence.getBytes(StandardCharsets.UTF_8)) {
-                String encodedByte = robertaResourcesCache.get().encodeByte(b);
+                String encodedByte = this.robertaResources.encodeByte(b);
                 matchedSequenceEncoded.append(encodedByte);
             }
 
@@ -98,7 +75,7 @@ public class RobertaTokenizer implements Tokenizer {
                 .map(encodedStr -> bytePairEncoder.encode(encodedStr, robertaResources))
                 // mapping each word in the given lists to a Long token from the vocabulary
                 .flatMapToLong(encodedStrList -> encodedStrList.stream()
-                        .mapToLong(word -> robertaResourcesCache.get().encodeWord(word, UNK_TOKEN)));
+                        .mapToLong(word -> this.robertaResources.encodeWord(word, UNK_TOKEN)));
 
         return concat(
                 concat(of(CLS_TOKEN), outputTokens), // adding BOS

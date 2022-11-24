@@ -4,6 +4,8 @@ import com.genesys.roberta.tokenizer.BiGram;
 import com.genesys.roberta.tokenizer.RobertaTokenizer;
 import com.genesys.roberta.tokenizer.RobertaTokenizerResources;
 import lombok.val;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -13,7 +15,6 @@ import static com.genesys.roberta.tokenizer.utils.CommonTestUtils.getResourceAbs
 public class RobertaTokenizerResourcesTest {
 
     private static final String VOCABULARY_BASE_DIR_PATH = getResourceAbsPath();
-
     private static final long UNKNOWN_TOKEN = RobertaTokenizer.UNK_TOKEN;
     private RobertaTokenizerResources robertaTokenizerResources;
 
