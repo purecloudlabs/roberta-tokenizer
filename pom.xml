@@ -39,7 +39,6 @@
 
     <!--  versions  -->
     <org.projectlombok.lombok.version>1.18.24</org.projectlombok.lombok.version>
-    <org.apache.commons.lang.version>3.12.0</org.apache.commons.lang.version>
     <com.google.guava.version>31.1-jre</com.google.guava.version>
     <com.google.gson.version>2.9.0</com.google.gson.version>
     <mockito.core.version>4.3.1</mockito.core.version>
@@ -132,7 +131,6 @@
     </plugins>
   </build>
 
-
   <dependencies>
     <dependency>
       <groupId>org.mockito</groupId>
@@ -144,11 +142,6 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>${org.projectlombok.lombok.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>${org.apache.commons.lang.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
