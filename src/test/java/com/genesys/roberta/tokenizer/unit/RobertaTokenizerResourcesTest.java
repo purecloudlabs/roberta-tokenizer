@@ -1,11 +1,9 @@
 package com.genesys.roberta.tokenizer.unit;
 
-import com.genesys.roberta.tokenizer.BiGram;
-import com.genesys.roberta.tokenizer.RobertaTokenizer;
-import com.genesys.roberta.tokenizer.RobertaTokenizerResources;
+import com.genesys.roberta.tokenizer.logic.BiGram;
+import com.genesys.roberta.tokenizer.pub.RobertaTokenizer;
+import com.genesys.roberta.tokenizer.resources.RobertaTokenizerResources;
 import lombok.val;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

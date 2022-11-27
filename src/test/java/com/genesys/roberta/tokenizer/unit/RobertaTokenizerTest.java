@@ -1,7 +1,7 @@
 package com.genesys.roberta.tokenizer.unit;
 
-import com.genesys.roberta.tokenizer.RobertaTokenizer;
-import com.genesys.roberta.tokenizer.RobertaTokenizerResources;
+import com.genesys.roberta.tokenizer.pub.RobertaTokenizer;
+import com.genesys.roberta.tokenizer.resources.RobertaTokenizerResources;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
@@ -11,11 +11,10 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.stream.LongStream;
 
-import static com.genesys.roberta.tokenizer.RobertaTokenizer.CLS_TOKEN;
-import static com.genesys.roberta.tokenizer.RobertaTokenizer.PAD_TOKEN;
-import static com.genesys.roberta.tokenizer.RobertaTokenizer.SEP_TOKEN;
+import static com.genesys.roberta.tokenizer.pub.RobertaTokenizer.CLS_TOKEN;
+import static com.genesys.roberta.tokenizer.pub.RobertaTokenizer.PAD_TOKEN;
+import static com.genesys.roberta.tokenizer.pub.RobertaTokenizer.SEP_TOKEN;
 import static com.genesys.roberta.tokenizer.utils.CommonTestUtils.getResourceAbsPath;
-import static org.mockito.Mockito.when;
 
 public class RobertaTokenizerTest {
     private static final String VOCABULARY_BASE_DIR_PATH = getResourceAbsPath();

@@ -1,4 +1,4 @@
-package com.genesys.roberta.tokenizer;
+package com.genesys.roberta.tokenizer.pub;
 
 /**
  * The use of this interface will have the ability to tokenize given String inputs

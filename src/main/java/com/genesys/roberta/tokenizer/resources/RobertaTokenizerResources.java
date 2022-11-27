@@ -1,5 +1,6 @@
-package com.genesys.roberta.tokenizer;
+package com.genesys.roberta.tokenizer.resources;
 
+import com.genesys.roberta.tokenizer.logic.BiGram;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.NonNull;

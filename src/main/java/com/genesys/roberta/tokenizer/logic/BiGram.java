@@ -1,4 +1,4 @@
-package com.genesys.roberta.tokenizer;
+package com.genesys.roberta.tokenizer.logic;
 
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;

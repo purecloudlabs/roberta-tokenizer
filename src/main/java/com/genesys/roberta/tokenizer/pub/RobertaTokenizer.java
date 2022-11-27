@@ -1,5 +1,7 @@
-package com.genesys.roberta.tokenizer;
+package com.genesys.roberta.tokenizer.pub;
 
+import com.genesys.roberta.tokenizer.logic.BytePairEncoder;
+import com.genesys.roberta.tokenizer.resources.RobertaTokenizerResources;
 import lombok.NonNull;
 import lombok.val;
 

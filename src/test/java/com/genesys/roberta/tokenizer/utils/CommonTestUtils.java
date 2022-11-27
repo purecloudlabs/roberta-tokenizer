@@ -1,6 +1,6 @@
 package com.genesys.roberta.tokenizer.utils;
 
-import com.genesys.roberta.tokenizer.RobertaTokenizer;
+import com.genesys.roberta.tokenizer.pub.RobertaTokenizer;
 
 import java.io.File;
 import java.util.Objects;
