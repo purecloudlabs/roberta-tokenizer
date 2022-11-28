@@ -1,8 +1,8 @@
 package com.genesys.roberta.tokenizer.unit;
 
-import com.genesys.roberta.tokenizer.logic.BiGram;
-import com.genesys.roberta.tokenizer.logic.BytePairEncoder;
-import com.genesys.roberta.tokenizer.resources.RobertaTokenizerResources;
+import com.genesys.roberta.tokenizer.BiGram;
+import com.genesys.roberta.tokenizer.BytePairEncoder;
+import com.genesys.roberta.tokenizer.RobertaTokenizerResources;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;

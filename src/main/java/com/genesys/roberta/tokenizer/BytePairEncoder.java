@@ -1,6 +1,5 @@
-package com.genesys.roberta.tokenizer.logic;
+package com.genesys.roberta.tokenizer;
 
-import com.genesys.roberta.tokenizer.resources.RobertaTokenizerResources;
 import lombok.NonNull;
 
 import java.util.ArrayList;
