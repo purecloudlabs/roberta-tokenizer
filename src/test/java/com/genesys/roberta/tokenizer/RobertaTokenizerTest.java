@@ -1,4 +1,4 @@
-package com.genesys.roberta.tokenizer.unit;
+package com.genesys.roberta.tokenizer;
 
 import com.genesys.roberta.tokenizer.RobertaTokenizer;
 import com.genesys.roberta.tokenizer.RobertaTokenizerResources;

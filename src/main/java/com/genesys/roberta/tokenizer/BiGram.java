@@ -10,7 +10,7 @@ import static java.lang.String.format;
  * A sequence of two adjacent elements from a string which differs by their position - left or right
  */
 @EqualsAndHashCode
-public class BiGram {
+class BiGram {
     private static final int PAIR_SIZE = 2;
     private final String left;
     private final String right;
