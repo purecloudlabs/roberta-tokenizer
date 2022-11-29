@@ -1,4 +1,4 @@
-package com.genesys.roberta.tokenizer.unit;
+package com.genesys.roberta.tokenizer;
 
 import com.genesys.roberta.tokenizer.BiGram;
 import com.genesys.roberta.tokenizer.RobertaTokenizer;
@@ -13,7 +13,6 @@ import static com.genesys.roberta.tokenizer.utils.CommonTestUtils.getResourceAbs
 public class RobertaTokenizerResourcesTest {
 
     private static final String VOCABULARY_BASE_DIR_PATH = getResourceAbsPath();
-
     private static final long UNKNOWN_TOKEN = RobertaTokenizer.UNK_TOKEN;
     private RobertaTokenizerResources robertaTokenizerResources;
 

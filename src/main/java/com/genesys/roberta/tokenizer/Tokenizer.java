@@ -3,7 +3,7 @@ package com.genesys.roberta.tokenizer;
 /**
  * The use of this interface will have the ability to tokenize given String inputs
  */
-public interface Tokenizer {
+interface Tokenizer {
 
     /**
      * Converts given input sentence to an array of long tokens

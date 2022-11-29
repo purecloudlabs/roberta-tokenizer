@@ -27,7 +27,7 @@ https://huggingface.co/docs/transformers/tokenizer_summary#bytelevel-bpe
 <dependency>
     <groupId>cloud.genesys</groupId>
     <artifactId>roberta-tokenizer</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.4</version>
 </dependency>
 
 <distributionManagement>
@@ -79,8 +79,8 @@ __Please note__:
 ```
 
 String baseDirPath = "base/dir/path";
-RobertaTokenizerResourcesFactory robertaResourcesFactory = new RobertaTokenizerResourcesFactory(baseDirPath);
-RobertaTokenizer robertaTokenizer = new RobertaTokenizer(robertaResourcesFactory);
+RobertaTokenizerResources robertaResources = new RobertaTokenizerResources(baseDirPath);
+RobertaTokenizer robertaTokenizer = new RobertaTokenizer(robertaResources);
 ...
 String sentence = "this must be the place";
 long[] tokenizedSentence = robertaTokenizer.tokenize(sentence);

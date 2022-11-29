@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
  * It does that by dividing the word into characters, then assembles sub strings of the given word trying to find the best
  * partition of the word according to the ranks of the merges file.
  */
-public class BytePairEncoder {
+class BytePairEncoder {
 
     /**
      * Applies the byte level BPE algorithm on the given word

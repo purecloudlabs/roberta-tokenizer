@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.NonNull;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -16,8 +17,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static com.genesys.roberta.tokenizer.validation.Validator.checkPathExists;
 
 /**
  * Holds the vocabularies and the merges file used to encode and tokenize the inputs.
@@ -125,5 +124,11 @@ public class RobertaTokenizerResources {
      */
     public Integer getRankOrDefault(@NonNull final BiGram biGram, final int defaultValue) {
         return bpeRanks.getOrDefault(biGram, defaultValue);
+    }
+
+    private static void checkPathExists(Path path, String errorMsg) throws FileNotFoundException {
+        if (!Files.exists(path)) {
+            throw new FileNotFoundException(errorMsg);
+        }
     }
 }
