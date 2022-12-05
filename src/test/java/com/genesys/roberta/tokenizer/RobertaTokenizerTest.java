@@ -1,7 +1,5 @@
 package com.genesys.roberta.tokenizer;
 
-import com.genesys.roberta.tokenizer.RobertaTokenizer;
-import com.genesys.roberta.tokenizer.RobertaTokenizerResources;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
@@ -9,10 +7,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
-import java.util.stream.LongStream;
 
 import static com.genesys.roberta.tokenizer.RobertaTokenizer.CLS_TOKEN;
-import static com.genesys.roberta.tokenizer.RobertaTokenizer.PAD_TOKEN;
 import static com.genesys.roberta.tokenizer.RobertaTokenizer.SEP_TOKEN;
 import static com.genesys.roberta.tokenizer.utils.CommonTestUtils.getResourceAbsPath;
 
@@ -21,7 +17,6 @@ public class RobertaTokenizerTest {
 
     @Mock
     private RobertaTokenizer robertaTokenizer;
-
 
     @BeforeClass
     public void initDataMembersBeforeClass() {
@@ -45,20 +40,6 @@ public class RobertaTokenizerTest {
         Assert.assertTrue(Arrays.stream(actualEncoding).skip(1).takeWhile(token -> token != SEP_TOKEN)
                 .allMatch(token -> token == expectedToken));
         Assert.assertEquals(actualEncoding[actualEncoding.length - 1], SEP_TOKEN);
-    }
-
-    @Test
-    public void shortSentenceWithPadding() {
-        String sentence = "stdin er";
-        long[] actualTokens = robertaTokenizer.tokenize(sentence);
-        long numOfTokensDifferentThanPadToken = Arrays.stream(actualTokens)
-                .filter(tok -> tok != PAD_TOKEN)
-                .count();
-        //We assure there is at least one token, except the beginning and end tokens different from 3
-        Assert.assertTrue(numOfTokensDifferentThanPadToken > 3);
-        //Drops all elements before the EOS appears, then verifies all the others are equal to the PAD token
-        LongStream paddedTokens = Arrays.stream(actualTokens).dropWhile(p -> p != SEP_TOKEN).skip(1);
-        Assert.assertTrue(paddedTokens.allMatch(token -> token == PAD_TOKEN));
     }
 
     @Test
