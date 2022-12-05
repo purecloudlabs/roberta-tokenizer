@@ -29,7 +29,7 @@ public class RobertaTokenizer implements Tokenizer {
     static long CLS_TOKEN; // Classification token. Also BOS (beginning of sequence) token
     static long SEP_TOKEN; // Separator token. Also EOS (end of sequence) token
     static long UNK_TOKEN; // Unknown Token.
-    private static final int SPECIAL_TOKENS_SIZE = 3; // Unknown Token.
+    private static final int SPECIAL_TOKENS_SIZE = 3;
 
     //splits a given sentence by space in to words or sub-words
     private static final Pattern PATTERN = Pattern
