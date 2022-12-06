@@ -56,7 +56,7 @@ public class RobertaTokenizer implements Tokenizer {
      * Constructs a RoBERTa tokenizer, using byte-level Byte-Pair-Encoding.
      *
      * @param robertaTokenizerResources - responsible for providing roberta vocabularies and merges files.
-     * @param specialTokens - MUST BE OF SIZE 4 and in this order: [CLS_TOKEN, SEP_TOKEN, UNK_TOKEN]
+     * @param specialTokens - MUST BE OF SIZE 3 and in this order: [CLS_TOKEN, SEP_TOKEN, UNK_TOKEN]
      */
     public RobertaTokenizer(@NonNull final RobertaTokenizerResources robertaTokenizerResources,
                             @NonNull final long[] specialTokens) {

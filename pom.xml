@@ -4,7 +4,7 @@
 
   <groupId>cloud.genesys</groupId>
   <artifactId>roberta-tokenizer</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
   <packaging>jar</packaging>
   <description>Tokenizer for RoBERTa model</description>
   <name>roberta-tokenizer</name>
