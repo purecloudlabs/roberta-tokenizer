@@ -8,12 +8,13 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
-import static com.genesys.roberta.tokenizer.RobertaTokenizer.CLS_TOKEN;
-import static com.genesys.roberta.tokenizer.RobertaTokenizer.SEP_TOKEN;
 import static com.genesys.roberta.tokenizer.utils.CommonTestUtils.getResourceAbsPath;
 
 public class RobertaTokenizerTest {
     private static final String VOCABULARY_BASE_DIR_PATH = getResourceAbsPath();
+    private static long CLS_TOKEN;
+    private static long SEP_TOKEN;
+    private static long UNK_TOKEN;
 
     @Mock
     private RobertaTokenizer robertaTokenizer;
@@ -23,6 +24,9 @@ public class RobertaTokenizerTest {
         MockitoAnnotations.openMocks(this);
         RobertaTokenizerResources robertaResources = new RobertaTokenizerResources(VOCABULARY_BASE_DIR_PATH);
         robertaTokenizer = new RobertaTokenizer(robertaResources);
+        CLS_TOKEN = robertaTokenizer.getClsToken();
+        SEP_TOKEN = robertaTokenizer.getSepToken();
+        UNK_TOKEN = robertaTokenizer.getUnkToken();
     }
 
     @Test(expectedExceptions = NullPointerException.class)

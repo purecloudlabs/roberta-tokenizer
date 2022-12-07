@@ -1,8 +1,5 @@
 package com.genesys.roberta.tokenizer;
 
-import com.genesys.roberta.tokenizer.BiGram;
-import com.genesys.roberta.tokenizer.RobertaTokenizer;
-import com.genesys.roberta.tokenizer.RobertaTokenizerResources;
 import lombok.val;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -13,7 +10,7 @@ import static com.genesys.roberta.tokenizer.utils.CommonTestUtils.getResourceAbs
 public class RobertaTokenizerResourcesTest {
 
     private static final String VOCABULARY_BASE_DIR_PATH = getResourceAbsPath();
-    private static final long UNKNOWN_TOKEN = RobertaTokenizer.UNK_TOKEN;
+    private static final long UNKNOWN_TOKEN = RobertaTokenizer.DEFAULT_UNK_TOKEN;
     private RobertaTokenizerResources robertaTokenizerResources;
 
     @BeforeClass

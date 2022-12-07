@@ -80,7 +80,7 @@ __Please note__:
 
 String baseDirPath = "base/dir/path";
 RobertaTokenizerResources robertaResources = new RobertaTokenizerResources(baseDirPath);
-RobertaTokenizer robertaTokenizer = new RobertaTokenizer(robertaResources);
+Tokenizer robertaTokenizer = new RobertaTokenizer(robertaResources);
 ...
 String sentence = "this must be the place";
 long[] tokenizedSentence = robertaTokenizer.tokenize(sentence);

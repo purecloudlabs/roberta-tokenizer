@@ -12,4 +12,19 @@ interface Tokenizer {
      * @return list of input IDs with the appropriate tokens
      */
     long[] tokenize(String sentence);
+
+    /**
+     * @return separator token
+     */
+    long getSepToken();
+
+    /**
+     * @return classification token
+     */
+    long getClsToken();
+
+    /**
+     * @return unknown token
+     */
+    long getUnkToken();
 }

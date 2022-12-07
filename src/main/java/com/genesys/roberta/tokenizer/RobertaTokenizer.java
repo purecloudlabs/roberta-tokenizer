@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.LongStream;
 
-import static com.google.common.base.Preconditions.checkState;
 import static java.util.stream.LongStream.concat;
 import static java.util.stream.LongStream.of;
 
@@ -26,10 +25,12 @@ import static java.util.stream.LongStream.of;
  */
 public class RobertaTokenizer implements Tokenizer {
 
-    static long CLS_TOKEN; // Classification token. Also BOS (beginning of sequence) token
-    static long SEP_TOKEN; // Separator token. Also EOS (end of sequence) token
-    static long UNK_TOKEN; // Unknown Token.
-    private static final int SPECIAL_TOKENS_SIZE = 3;
+    public static final long DEFAULT_CLS_TOKEN = 0;
+    public static final long DEFAULT_SEP_TOKEN = 2;
+    public static final long DEFAULT_UNK_TOKEN = 3;
+    private static long CLS_TOKEN; // Also BOS (beginning of sequence) token
+    private static long SEP_TOKEN; // Also EOS (end of sequence) token
+    private static long UNK_TOKEN; // Unknown Token.
 
     //splits a given sentence by space in to words or sub-words
     private static final Pattern PATTERN = Pattern
@@ -47,24 +48,24 @@ public class RobertaTokenizer implements Tokenizer {
      * [CLS_TOKEN = 0, SEP_TOKEN = 2, UNK_TOKEN = 3]
      */
     public RobertaTokenizer(@NonNull final RobertaTokenizerResources robertaTokenizerResources) {
-        this.robertaResources = robertaTokenizerResources;
-        this.bytePairEncoder = new BytePairEncoder();
-        initSpecialTokens();
+        this(robertaTokenizerResources, DEFAULT_CLS_TOKEN, DEFAULT_SEP_TOKEN, DEFAULT_UNK_TOKEN);
     }
 
     /**
      * Constructs a RoBERTa tokenizer, using byte-level Byte-Pair-Encoding.
      *
      * @param robertaTokenizerResources - responsible for providing roberta vocabularies and merges files.
-     * @param specialTokens - MUST BE OF SIZE 3 and in this order: [CLS_TOKEN, SEP_TOKEN, UNK_TOKEN]
+     * @param clsToken Classification token
+     * @param sepToken Separator token
+     * @param unkToken Unknown token
      */
-    public RobertaTokenizer(@NonNull final RobertaTokenizerResources robertaTokenizerResources,
-                            @NonNull final long[] specialTokens) {
+    public RobertaTokenizer(@NonNull final RobertaTokenizerResources robertaTokenizerResources, final long clsToken,
+                            final long sepToken, final long unkToken) {
         this.robertaResources = robertaTokenizerResources;
         this.bytePairEncoder = new BytePairEncoder();
-        checkState(specialTokens.length == SPECIAL_TOKENS_SIZE,
-                String.format("Expecting %d special tokens but received %d", SPECIAL_TOKENS_SIZE, specialTokens.length));
-        initSpecialTokens(specialTokens);
+        CLS_TOKEN = clsToken;
+        SEP_TOKEN = sepToken;
+        UNK_TOKEN = unkToken;
     }
 
     /**
@@ -101,14 +102,18 @@ public class RobertaTokenizer implements Tokenizer {
         return concat(outputTokens, of(SEP_TOKEN)).toArray(); // adding EOS
     }
 
-    @SuppressWarnings("checkstyle:MagicNumber")
-    private void initSpecialTokens() {
-        initSpecialTokens(new long[]{0, 2, 3});
+    @Override
+    public long getClsToken() {
+        return CLS_TOKEN;
     }
 
-    private void initSpecialTokens(long[] specialTokens) {
-        CLS_TOKEN = specialTokens[0];
-        SEP_TOKEN = specialTokens[1];
-        UNK_TOKEN = specialTokens[2];
+    @Override
+    public long getSepToken() {
+        return SEP_TOKEN;
+    }
+
+    @Override
+    public long getUnkToken() {
+        return UNK_TOKEN;
     }
 }
