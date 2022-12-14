@@ -28,13 +28,15 @@ public class RobertaTokenizer implements Tokenizer {
     public static final long DEFAULT_CLS_TOKEN = 0;
     public static final long DEFAULT_SEP_TOKEN = 2;
     public static final long DEFAULT_UNK_TOKEN = 3;
-    private static long CLS_TOKEN; // Also BOS (beginning of sequence) token
-    private static long SEP_TOKEN; // Also EOS (end of sequence) token
-    private static long UNK_TOKEN; // Unknown Token.
 
     //splits a given sentence by space in to words or sub-words
     private static final Pattern PATTERN = Pattern
             .compile("'s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| ?[^\\s\\p{L}\\p{N}]+|\\s+(?!\\S)|\\s+");
+
+    // Special tokens
+    private final long clsToken; // Also BOS (beginning of sequence) token
+    private final long sepToken; // Also EOS (end of sequence) token
+    private final long unkToken; // Unknown Token.
 
     private final RobertaTokenizerResources robertaResources;
     private final BytePairEncoder bytePairEncoder;
@@ -63,9 +65,9 @@ public class RobertaTokenizer implements Tokenizer {
                             final long sepToken, final long unkToken) {
         this.robertaResources = robertaTokenizerResources;
         this.bytePairEncoder = new BytePairEncoder();
-        CLS_TOKEN = clsToken;
-        SEP_TOKEN = sepToken;
-        UNK_TOKEN = unkToken;
+        this.clsToken = clsToken;
+        this.sepToken = sepToken;
+        this.unkToken = unkToken;
     }
 
     /**
@@ -96,24 +98,21 @@ public class RobertaTokenizer implements Tokenizer {
                 .map(encodedStr -> bytePairEncoder.encode(encodedStr, robertaResources))
                 // mapping each word in the given lists to a Long token from the vocabulary
                 .flatMapToLong(encodedStrList -> encodedStrList.stream()
-                        .mapToLong(word -> this.robertaResources.encodeWord(word, UNK_TOKEN)));
+                        .mapToLong(word -> this.robertaResources.encodeWord(word, unkToken)));
 
-        outputTokens = concat(of(CLS_TOKEN), outputTokens); // adding BOS
-        return concat(outputTokens, of(SEP_TOKEN)).toArray(); // adding EOS
+        outputTokens = concat(of(clsToken), outputTokens); // adding BOS
+        return concat(outputTokens, of(sepToken)).toArray(); // adding EOS
     }
 
-    @Override
     public long getClsToken() {
-        return CLS_TOKEN;
+        return clsToken;
     }
 
-    @Override
     public long getSepToken() {
-        return SEP_TOKEN;
+        return sepToken;
     }
 
-    @Override
     public long getUnkToken() {
-        return UNK_TOKEN;
+        return unkToken;
     }
 }
