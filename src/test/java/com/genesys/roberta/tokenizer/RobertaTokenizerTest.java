@@ -1,7 +1,5 @@
 package com.genesys.roberta.tokenizer;
 
-import com.genesys.roberta.tokenizer.RobertaTokenizer;
-import com.genesys.roberta.tokenizer.RobertaTokenizerResources;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
@@ -9,25 +7,24 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
-import java.util.stream.LongStream;
 
-import static com.genesys.roberta.tokenizer.RobertaTokenizer.CLS_TOKEN;
-import static com.genesys.roberta.tokenizer.RobertaTokenizer.PAD_TOKEN;
-import static com.genesys.roberta.tokenizer.RobertaTokenizer.SEP_TOKEN;
 import static com.genesys.roberta.tokenizer.utils.CommonTestUtils.getResourceAbsPath;
 
 public class RobertaTokenizerTest {
     private static final String VOCABULARY_BASE_DIR_PATH = getResourceAbsPath();
+    private long clsToken;
+    private long sepToken;
 
     @Mock
     private RobertaTokenizer robertaTokenizer;
-
 
     @BeforeClass
     public void initDataMembersBeforeClass() {
         MockitoAnnotations.openMocks(this);
         RobertaTokenizerResources robertaResources = new RobertaTokenizerResources(VOCABULARY_BASE_DIR_PATH);
         robertaTokenizer = new RobertaTokenizer(robertaResources);
+        clsToken = robertaTokenizer.getClsToken();
+        sepToken = robertaTokenizer.getSepToken();
     }
 
     @Test(expectedExceptions = NullPointerException.class)
@@ -41,24 +38,10 @@ public class RobertaTokenizerTest {
         String sentence = "erererererererererererererererererererererererer";
         long expectedToken = 19;
         long[] actualEncoding = robertaTokenizer.tokenize(sentence);
-        Assert.assertEquals(actualEncoding[0], CLS_TOKEN);
-        Assert.assertTrue(Arrays.stream(actualEncoding).skip(1).takeWhile(token -> token != SEP_TOKEN)
+        Assert.assertEquals(actualEncoding[0], clsToken);
+        Assert.assertTrue(Arrays.stream(actualEncoding).skip(1).takeWhile(token -> token != sepToken)
                 .allMatch(token -> token == expectedToken));
-        Assert.assertEquals(actualEncoding[actualEncoding.length - 1], SEP_TOKEN);
-    }
-
-    @Test
-    public void shortSentenceWithPadding() {
-        String sentence = "stdin er";
-        long[] actualTokens = robertaTokenizer.tokenize(sentence);
-        long numOfTokensDifferentThanPadToken = Arrays.stream(actualTokens)
-                .filter(tok -> tok != PAD_TOKEN)
-                .count();
-        //We assure there is at least one token, except the beginning and end tokens different from 3
-        Assert.assertTrue(numOfTokensDifferentThanPadToken > 3);
-        //Drops all elements before the EOS appears, then verifies all the others are equal to the PAD token
-        LongStream paddedTokens = Arrays.stream(actualTokens).dropWhile(p -> p != SEP_TOKEN).skip(1);
-        Assert.assertTrue(paddedTokens.allMatch(token -> token == PAD_TOKEN));
+        Assert.assertEquals(actualEncoding[actualEncoding.length - 1], sepToken);
     }
 
     @Test
@@ -66,9 +49,9 @@ public class RobertaTokenizerTest {
         String sentence = "er";
         long expectedToken = 19;
         long[] actualTokens = robertaTokenizer.tokenize(sentence);
-        Assert.assertEquals(actualTokens[0], CLS_TOKEN);
+        Assert.assertEquals(actualTokens[0], clsToken);
         Assert.assertEquals(actualTokens[1], expectedToken);
-        Assert.assertEquals(actualTokens[2], SEP_TOKEN);
+        Assert.assertEquals(actualTokens[2], sepToken);
     }
 
     /**
@@ -80,10 +63,10 @@ public class RobertaTokenizerTest {
     public void tokenizeCorrectly() {
         String sentence = "lower newer";
         long[] expectedTokens = {
-                CLS_TOKEN,
+                clsToken,
                 4, 5, 6, 19, // lower
                 114, 13, 7, 6, 19, // newer
-                SEP_TOKEN};
+                sepToken};
         long[] actualTokens = robertaTokenizer.tokenize(sentence);
         Assert.assertEquals(actualTokens, expectedTokens);
     }
@@ -91,8 +74,8 @@ public class RobertaTokenizerTest {
     @Test
     public void emptySentence() {
         long[] actualTokens = robertaTokenizer.tokenize("");
-        Assert.assertEquals(actualTokens[0], CLS_TOKEN);
-        Assert.assertEquals(actualTokens[1], SEP_TOKEN);
+        Assert.assertEquals(actualTokens[0], clsToken);
+        Assert.assertEquals(actualTokens[1], sepToken);
     }
 
     @Test

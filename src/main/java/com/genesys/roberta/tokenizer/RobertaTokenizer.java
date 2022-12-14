@@ -25,14 +25,18 @@ import static java.util.stream.LongStream.of;
  */
 public class RobertaTokenizer implements Tokenizer {
 
-    public static final long PAD_TOKEN = 1; // Tokenized sentences shorter than the max allowed length will be padded with the PAD_TOKEN
-    public static final long CLS_TOKEN = 0; // Classification token. Also BOS (beginning of sequence) token
-    public static final long SEP_TOKEN = 2; // Separator token. Also EOS (end of sequence) token
-    public static final long UNK_TOKEN = 3; // Unknown Token.
+    public static final long DEFAULT_CLS_TOKEN = 0;
+    public static final long DEFAULT_SEP_TOKEN = 2;
+    public static final long DEFAULT_UNK_TOKEN = 3;
 
     //splits a given sentence by space in to words or sub-words
     private static final Pattern PATTERN = Pattern
             .compile("'s|'t|'re|'ve|'m|'ll|'d| ?\\p{L}+| ?\\p{N}+| ?[^\\s\\p{L}\\p{N}]+|\\s+(?!\\S)|\\s+");
+
+    // Special tokens
+    private final long clsToken; // Also BOS (beginning of sequence) token
+    private final long sepToken; // Also EOS (end of sequence) token
+    private final long unkToken; // Unknown Token.
 
     private final RobertaTokenizerResources robertaResources;
     private final BytePairEncoder bytePairEncoder;
@@ -41,10 +45,29 @@ public class RobertaTokenizer implements Tokenizer {
      * Constructs a RoBERTa tokenizer, using byte-level Byte-Pair-Encoding.
      *
      * @param robertaTokenizerResources - responsible for providing roberta vocabularies and merges files.
+     *
+     * Note that this constructor will use HuggingFace's default special tokens:
+     * [CLS_TOKEN = 0, SEP_TOKEN = 2, UNK_TOKEN = 3]
      */
     public RobertaTokenizer(@NonNull final RobertaTokenizerResources robertaTokenizerResources) {
+        this(robertaTokenizerResources, DEFAULT_CLS_TOKEN, DEFAULT_SEP_TOKEN, DEFAULT_UNK_TOKEN);
+    }
+
+    /**
+     * Constructs a RoBERTa tokenizer, using byte-level Byte-Pair-Encoding.
+     *
+     * @param robertaTokenizerResources - responsible for providing roberta vocabularies and merges files.
+     * @param clsToken Classification token
+     * @param sepToken Separator token
+     * @param unkToken Unknown token
+     */
+    public RobertaTokenizer(@NonNull final RobertaTokenizerResources robertaTokenizerResources, final long clsToken,
+                            final long sepToken, final long unkToken) {
         this.robertaResources = robertaTokenizerResources;
         this.bytePairEncoder = new BytePairEncoder();
+        this.clsToken = clsToken;
+        this.sepToken = sepToken;
+        this.unkToken = unkToken;
     }
 
     /**
@@ -75,11 +98,21 @@ public class RobertaTokenizer implements Tokenizer {
                 .map(encodedStr -> bytePairEncoder.encode(encodedStr, robertaResources))
                 // mapping each word in the given lists to a Long token from the vocabulary
                 .flatMapToLong(encodedStrList -> encodedStrList.stream()
-                        .mapToLong(word -> this.robertaResources.encodeWord(word, UNK_TOKEN)));
+                        .mapToLong(word -> this.robertaResources.encodeWord(word, unkToken)));
 
-        return concat(
-                concat(of(CLS_TOKEN), outputTokens), // adding BOS
-                of(SEP_TOKEN)) // adding EOS
-                .toArray();
+        outputTokens = concat(of(clsToken), outputTokens); // adding BOS
+        return concat(outputTokens, of(sepToken)).toArray(); // adding EOS
+    }
+
+    public long getClsToken() {
+        return clsToken;
+    }
+
+    public long getSepToken() {
+        return sepToken;
+    }
+
+    public long getUnkToken() {
+        return unkToken;
     }
 }
