@@ -17,7 +17,7 @@ class BiGram {
 
     private BiGram(@NonNull final String[] pairArray) {
         checkState(pairArray.length == PAIR_SIZE,
-                format("Expecting given input pair to be exactly of size [%d], but it's of size: [%d]", PAIR_SIZE, pairArray.length));
+                format("Expecting BiGram pair to be of size: [%d] but it's of size: [%d]", PAIR_SIZE, pairArray.length));
         this.left = pairArray[0];
         this.right = pairArray[1];
     }
