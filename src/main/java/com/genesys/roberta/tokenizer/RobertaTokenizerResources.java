@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -79,8 +78,9 @@ public class RobertaTokenizerResources {
                     String.format("%s merges file path: [%s] was not found", RobertaTokenizerResources.class.getSimpleName(),
                             mergesPath));
 
-            List<String> lines = Files.readAllLines(mergesPath, StandardCharsets.UTF_8);
+            final List<String> lines = Files.readAllLines(mergesPath, StandardCharsets.UTF_8);
             final int startIndex = getStartingIndexOfMergesFile(lines);
+
             return IntStream.range(startIndex, lines.size())
                     .boxed()
                     .collect(Collectors.toUnmodifiableMap(
@@ -135,19 +135,19 @@ public class RobertaTokenizerResources {
     }
 
     /**
-     * Since we use HuggingFace tokenizers, some of them output the merges file with a comment in the head of the file:
+     * Since we use HuggingFace tokenizers the merges file output might be with a comment in the head of the file like:
      * "#version: 0.2 - Trained by `huggingface/tokenizers`"
      *
-     * This method will make sure we can accept both files w/o that comment
+     * This method will make sure we can accept both files w/o that header comment
      *
      * @param lines all lines from merges file
-     * @return 1 if the file has the comment 0 o.w.
+     * @return 1 will be the starting index of the file and 0 otherwise
      */
     private int getStartingIndexOfMergesFile(final List<String> lines) {
         if (lines.isEmpty()) {
             return 0;
         }
-        final String line = lines.get(0);
-        return line.split(" ").length > 2 ? 1 : 0;
+        final String header = lines.get(0);
+        return header.split(" ").length > 2 ? 1 : 0;
     }
 }
