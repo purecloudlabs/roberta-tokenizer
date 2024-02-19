@@ -44,11 +44,11 @@ public class RobertaTokenizerResources {
     }
 
     private Map<Integer, String> loadBaseVocabulary(@NonNull final String resourcesPath) {
-        Path baseVocabPath = Paths.get(resourcesPath, BASE_VOCABULARY_FILE_NAME);
+        final Path baseVocabPath = Paths.get(resourcesPath, BASE_VOCABULARY_FILE_NAME);
         try {
             checkPathExists(baseVocabPath,
                     String.format("base vocabulary file path for Roberta: [ %s ] was not found", baseVocabPath));
-            Map<Integer, String> baseVocabMap = new Gson()
+            final Map<Integer, String> baseVocabMap = new Gson()
                     .fromJson(Files.readString(baseVocabPath), new TypeToken<HashMap<Integer, String>>(){}.getType());
             return Collections.unmodifiableMap(baseVocabMap);
         } catch (IOException e) {
@@ -58,11 +58,11 @@ public class RobertaTokenizerResources {
     }
 
     private Map<String, Long> loadVocabulary(@NonNull final String resourcesPath) {
-        Path vocabPath = Paths.get(resourcesPath, VOCABULARY_FILE_NAME);
+        final Path vocabPath = Paths.get(resourcesPath, VOCABULARY_FILE_NAME);
         try {
             checkPathExists(vocabPath,
                     String.format("vocabulary file path for Roberta: [%s] was not found", vocabPath));
-            Map<String, Long> vocabMap = new Gson()
+            final Map<String, Long> vocabMap = new Gson()
                     .fromJson(Files.readString(vocabPath), new TypeToken<HashMap<String, Long>>(){}.getType());
             return Collections.unmodifiableMap(vocabMap);
         } catch (IOException e) {
@@ -71,21 +71,28 @@ public class RobertaTokenizerResources {
         }
     }
 
+    /**
+     * Since we use HuggingFace tokenizers the merges file output might be with a comment in the head of the file like:
+     * "#version: 0.2 - Trained by `huggingface/tokenizers`"
+     * This load method is able to load files w/o the header
+     *
+     * @param resourcesPath resources dir path
+     * @return the merges map
+     */
     private Map<BiGram, Integer> loadMergesFile(@NonNull final String resourcesPath) {
-        Path mergesPath = Paths.get(resourcesPath, MERGES_FILE_NAME);
+        final Path mergesPath = Paths.get(resourcesPath, MERGES_FILE_NAME);
         try {
             checkPathExists(mergesPath,
                     String.format("%s merges file path: [%s] was not found", RobertaTokenizerResources.class.getSimpleName(),
                             mergesPath));
 
-            final List<String> lines = Files.readAllLines(mergesPath, StandardCharsets.UTF_8);
-            final int startIndex = getStartingIndexOfMergesFile(lines);
+            final List<String[]> pairs = Files.readAllLines(mergesPath, StandardCharsets.UTF_8).stream()
+                    .map(line -> line.split(" "))
+                    .filter(pairArr -> pairArr.length == 2)
+                    .toList();
 
-            return IntStream.range(startIndex, lines.size())
-                    .boxed()
-                    .collect(Collectors.toUnmodifiableMap(
-                            idx -> BiGram.of(lines.get(idx).split(" ")),
-                            Function.identity()));
+            return IntStream.range(0, pairs.size()).boxed()
+                    .collect(Collectors.toUnmodifiableMap(idx -> BiGram.of(pairs.get(idx)), Function.identity()));
         } catch (IOException e) {
             throw new IllegalStateException(String.format(
                     "Failed to load merges file for Roberta from file path [ %s ]", mergesPath), e);
@@ -132,22 +139,5 @@ public class RobertaTokenizerResources {
         if (!Files.exists(path)) {
             throw new FileNotFoundException(errorMsg);
         }
-    }
-
-    /**
-     * Since we use HuggingFace tokenizers the merges file output might be with a comment in the head of the file like:
-     * "#version: 0.2 - Trained by `huggingface/tokenizers`"
-     *
-     * This method will make sure we can accept both files w/o that header comment
-     *
-     * @param lines all lines from merges file
-     * @return 1 will be the starting index of the file and 0 otherwise
-     */
-    private int getStartingIndexOfMergesFile(final List<String> lines) {
-        if (lines.isEmpty()) {
-            return 0;
-        }
-        final String header = lines.get(0);
-        return header.split(" ").length > 2 ? 1 : 0;
     }
 }
