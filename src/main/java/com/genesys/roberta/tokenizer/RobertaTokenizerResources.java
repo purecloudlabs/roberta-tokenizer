@@ -18,6 +18,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.google.common.base.Preconditions.checkState;
+
 /**
  * Holds the vocabularies and the merges file used to encode and tokenize the inputs.
  */
@@ -72,9 +74,8 @@ public class RobertaTokenizerResources {
     }
 
     /**
-     * Since we use HuggingFace tokenizers the merges file output might be with a comment in the head of the file like:
-     * "#version: 0.2 - Trained by `huggingface/tokenizers`"
-     * This load method is able to load files w/o the header
+     * This method allows merges file to be with or without the header.
+     * Other than that, it will accept in every line one BiGram ONLY, split by one space.
      *
      * @param resourcesPath resources dir path
      * @return the merges map
@@ -86,13 +87,11 @@ public class RobertaTokenizerResources {
                     String.format("%s merges file path: [%s] was not found", RobertaTokenizerResources.class.getSimpleName(),
                             mergesPath));
 
-            final List<String[]> pairs = Files.readAllLines(mergesPath, StandardCharsets.UTF_8).stream()
-                    .map(line -> line.split(" "))
-                    .filter(pairArr -> pairArr.length == 2)
-                    .toList();
+            final List<String> lines = Files.readAllLines(mergesPath, StandardCharsets.UTF_8);
+            final int startIndex = isMergesFileWithHeader(lines) ? 1 : 0;
 
-            return IntStream.range(0, pairs.size()).boxed()
-                    .collect(Collectors.toUnmodifiableMap(idx -> BiGram.of(pairs.get(idx)), Function.identity()));
+            return IntStream.range(startIndex, lines.size()).boxed()
+                    .collect(Collectors.toUnmodifiableMap(idx -> BiGram.of(lines.get(idx).split(" ")), Function.identity()));
         } catch (IOException e) {
             throw new IllegalStateException(String.format(
                     "Failed to load merges file for Roberta from file path [ %s ]", mergesPath), e);
@@ -126,13 +125,26 @@ public class RobertaTokenizerResources {
     }
 
     /**
-     *  Returns the ranl for the given BiGram according to the rank file
+     * Returns the rank for the given BiGram according to the rank file
      * @param biGram a pair of Strings
      * @param defaultValue positive integer
      * @return the rank of that pair or default value if it doesn't exist
      */
     public Integer getRankOrDefault(@NonNull final BiGram biGram, final int defaultValue) {
         return bpeRanks.getOrDefault(biGram, defaultValue);
+    }
+
+    /**
+     * Since we use HuggingFace tokenizers, the merges file output might have a comment in the head of the file like:
+     * "#version: 0.2 - Trained by `huggingface/tokenizers`"
+     *
+     * @param lines - all lines of the merges file
+     * @return true if merges file starts with a comment and false o.w.
+     */
+    private boolean isMergesFileWithHeader(@NonNull final List<String> lines) {
+        checkState(!lines.isEmpty(), "provided empty merges file");
+        final String header = lines.get(0);
+        return header.split(" ").length != 2;
     }
 
     private static void checkPathExists(final Path path, final String errorMsg) throws FileNotFoundException {
